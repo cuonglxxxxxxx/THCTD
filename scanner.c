@@ -155,23 +155,21 @@ Token* readConstChar(void) {
 Token* readString(void) {
   Token *token = makeToken(TK_STR, lineNo, colNo);
   int i = 0;
-  readChar(); // Consume the opening quote
+  readChar();
 
   while (currentChar != EOF && charCodes[currentChar] != CHAR_DOUBLEQUOTE) {
     if (i >= MAX_IDENT_LEN) {
       error(ERR_STRTOOLONG, token->lineNo, token->colNo);
-      // Consume the rest of the string until the closing quote or EOF
       while(currentChar != EOF && charCodes[currentChar] != CHAR_DOUBLEQUOTE) readChar();
-      if(currentChar != EOF) readChar(); // consume closing quote
+      if(currentChar != EOF) readChar();
       return makeToken(TK_NONE, token->lineNo, token->colNo);
     }
 
     if (currentChar == '\\') {
-      readChar(); // Consume the backslash
+      readChar();
       if (currentChar == '"' || currentChar == '\\') {
         token->string[i++] = currentChar;
       } else {
-        // Invalid escape sequence, but we'll add it to the string and let the user see the error
         token->string[i++] = '\\';
         if (i < MAX_IDENT_LEN) {
           token->string[i++] = currentChar;
@@ -183,13 +181,13 @@ Token* readString(void) {
     readChar();
   }
 
-  if (currentChar == EOF) { // Unterminated string
+  if (currentChar == EOF) {
     error(ERR_INVALIDCHARCONSTANT, token->lineNo, token->colNo);
     return makeToken(TK_NONE, token->lineNo, token->colNo);
   }
 
   token->string[i] = '\0';
-  readChar(); // Consume the closing quote
+  readChar();
   return token;
 }
 
