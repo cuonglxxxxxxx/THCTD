@@ -90,9 +90,9 @@ Token* readIdentKeyword(void) {
 Token* readNumber(void) {
   // TODO
   Token *token = makeToken(TK_NUMBER, lineNo, colNo);
-  
+
   int i = 0;
-  
+
   while (charCodes[currentChar] == CHAR_DIGIT) {
     if (i < MAX_IDENT_LEN) {
       token->string[i] = (char)currentChar;
@@ -102,7 +102,7 @@ Token* readNumber(void) {
   }
 
   token->string[i] = '\0';
-  
+
   long value = strtol(token->string, NULL, 10);
   if(value > INT_MAX){
     error(ERR_INVALIDSYMBOL, lineNo, colNo);
@@ -195,16 +195,16 @@ Token* getToken(void) {
   Token *token;
   int ln, cn;
 
-  if (currentChar == EOF) 
+  if (currentChar == EOF)
     return makeToken(TK_EOF, lineNo, colNo);
 
   switch (charCodes[currentChar]) {
   case CHAR_SPACE: skipBlank(); return getToken();
   case CHAR_LETTER: return readIdentKeyword();
   case CHAR_DIGIT: return readNumber();
-  case CHAR_PLUS: 
+  case CHAR_PLUS:
     token = makeToken(SB_PLUS, lineNo, colNo);
-    readChar(); 
+    readChar();
     return token;
     // ....
     // TODO
@@ -251,11 +251,6 @@ Token* getToken(void) {
     }
     return token;
 
-  case CHAR_EQ: // =
-    token = makeToken(SB_EQ, lineNo, colNo);
-    readChar();
-    return token;
-
   case CHAR_EXCLAIMATION: // Handle `!` or `!=`
     token = makeToken(CHAR_EXCLAIMATION, lineNo, colNo);
     readChar();
@@ -264,6 +259,12 @@ Token* getToken(void) {
       readChar();
     }
     return token;
+
+  case CHAR_EQ: // =
+    token = makeToken(SB_EQ, lineNo, colNo);
+    readChar();
+    return token;
+
 
   case CHAR_COMMA: // ,
     token = makeToken(SB_COMMA, lineNo, colNo);
@@ -317,7 +318,7 @@ Token* getToken(void) {
   default:
     token = makeToken(TK_NONE, lineNo, colNo);
     error(ERR_INVALIDSYMBOL, lineNo, colNo);
-    readChar(); 
+    readChar();
     return token;
   }
 }
@@ -410,7 +411,7 @@ int main(int argc, char *argv[]) {
     printf("Can\'t read input file!\n");
     return -1;
   }
-    
+
   return 0;
 }
 
